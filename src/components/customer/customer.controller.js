@@ -16,7 +16,22 @@ function customerController() {
         return errors(res, 500, e);
       }
     },
-
+    getOneCustomer: async (req, res) => {
+      let _id = typeof (req.params._id) === 'string' && req.params._id.length === 24 ? req.params._id : false;
+      if (!_id) {
+        return errors(res, 400, "id path param is missing");
+      }
+      try {
+        let customer = await CustomerSchema.findOne({ "_id": _id });
+        if (!customer) {
+          return errors(res, 400, "Customer not found");
+        }
+        return success(res, 200, customer, "success");
+      } catch (e) {
+        console.log(e)
+        return errors(res, 500, e);
+      }
+    },
     // Create user 
     createCustomer: async (req, res) => {
       try {
